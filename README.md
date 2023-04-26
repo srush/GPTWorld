@@ -1,4 +1,4 @@
-# GPTWorld Prompt Golf
+# GPTWorld - Prompt Golf
 
 GPTWorld is an educational environment to learn about Prompting.
 It consists of a grid-world environment to test the ability of language models to follow somewhat complex instructions in a grounded environment. 
