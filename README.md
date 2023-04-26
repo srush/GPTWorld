@@ -16,6 +16,12 @@ You instruct the model to generate code to play the game.
 
 The goal of the puzzle is to construct a prompt that can get GPT-4 to solve a complex game. You can watch in real-time as GPT plays the game. 
 
+Use this link to get started: 
+
+<p align="center">
+<a href="https://colab.research.google.com/github/srush/GPTWorld-Challenge/blob/main/GPT4_game.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab\"/></a>
+</p>
+
 <img width=500px src="https://user-images.githubusercontent.com/35882/234614176-789fd6a8-bc7c-4f42-889b-81b3879cca36.png"/>
 
 ## Leaderboard
