@@ -26,7 +26,7 @@ Use this link to get started:
 
 ## Leaderboard
 
-I was able to solve the big puzzle using roughly 2000 tokens (input/output). Can you do better?
+I was able to solve the big puzzle using roughly 2000 tokens (input/output). Can you do better? I'll post the best ones here.
 
 ## Other Puzzles
 
