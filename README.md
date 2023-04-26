@@ -8,4 +8,4 @@ It consists of a grid-world environment to test the ability of language models t
 The puzzle is done in a Colab. 
 
 
-![image](https://user-images.githubusercontent.com/35882/234614176-789fd6a8-bc7c-4f42-889b-81b3879cca36.png)
+<img width=200px src="https://user-images.githubusercontent.com/35882/234614176-789fd6a8-bc7c-4f42-889b-81b3879cca36.png"/>
