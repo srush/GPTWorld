@@ -12,6 +12,8 @@ You instruct the model to generate code to play the game.
 <img src="https://user-images.githubusercontent.com/35882/234447369-6a4ca94d-5bb8-4c8e-a34d-a1ff0614bf7d.gif" />
 </p>
 
+## Goal
+
 The goal of the puzzle is to construct a prompt that can get GPT-4 to solve a complex game. You can watch in real-time as GPT plays the game. 
 
 <img width=500px src="https://user-images.githubusercontent.com/35882/234614176-789fd6a8-bc7c-4f42-889b-81b3879cca36.png"/>
@@ -19,3 +21,9 @@ The goal of the puzzle is to construct a prompt that can get GPT-4 to solve a co
 ## Leaderboard
 
 I was able to solve the big puzzle using roughly 2000 tokens (input/output). Can you do better?
+
+## Other Puzzles
+
+If you find this fun also check out.
+
+* https://github.com/srush/GPU-Puzzles
