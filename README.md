@@ -9,7 +9,7 @@ It consists of a grid-world environment to test the ability of language models t
 You instruct the model to generate code to play the game. 
 
 <p align="center">
-![download (1)](https://user-images.githubusercontent.com/35882/234447369-6a4ca94d-5bb8-4c8e-a34d-a1ff0614bf7d.gif)
+<img src="https://user-images.githubusercontent.com/35882/234447369-6a4ca94d-5bb8-4c8e-a34d-a1ff0614bf7d.gif" />
 </p>
 
 The goal of the puzzle is to construct a prompt that can get GPT-4 to solve a complex game. You can watch in real-time as GPT plays the game. 
