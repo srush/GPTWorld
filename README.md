@@ -2,7 +2,7 @@
 title: GPTWorld
 emoji:  🌎
 colorFrom: blue
-colorTo: orange
+colorTo: green
 sdk: gradio
 app_file: app.py
 pinned: false

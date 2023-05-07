@@ -490,7 +490,7 @@ def move(board, action, old_pos):
 
 
     
-app.queue().launch(share=True)
+app.queue().launch()
 
 
 # f = io.StringIO()
