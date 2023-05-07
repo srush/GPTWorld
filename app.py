@@ -363,24 +363,24 @@ with gr.Blocks() as app:
     # test = gr.Code(label="test")
     # im2 = gr.Gallery()
     # im2.style(preview=True)
-    gr.Markdown("""
-# GPTWorld
+    gr.HTML("""
+<center>
+<h1>🌎 GPTWorld 🌍</h1>
 
-GPTWorld is a prompting game. Your goal is to get an LLM to complete a maze. If you can do this successfully, it will be able to navigate itself through the world from the start (o) to the key the exit (x). In the bottom right we show you a sample target output of GPT for a maze. Your goal is to get the model to generate this from scratch for an unseen maze.
-
-
-The game takes place on a hexagonal grid with walls. Even rows are labeled (0,0), (0, 2), (0,4) and odd rows are labeled (1, 1), (1, 3), (1, 5). This was done to make the puzzle a bit less common.
-
+<p>
+GPTWorld is a prompting game. Your goal is to get an LLM to complete a maze. You start at (o) need to first get the key and then reach the exit (x).  The game takes place on a hexagonal grid with walls [Even rows are labeled (0,0), (0, 2), (0,4) and odd rows are labeled (1, 1), (1, 3), (1, 5)]. You play by prompting GPT to write code which solves the game on the right.
+</p>
+</center>
 """)
     
     with gr.Row():
         with gr.Column():
-            game_desc = gr.Text(label="Game")
+            game_desc = gr.Text(label="Game (Select one first or make your own)")
             examples = gr.Radio(show_label=False,
                             choices=["Easy", "Medium", "Hard", "Evil"])
             api_key = gr.Text(label="OpenAI Key", type="password",
                               value=os.environ.get("OPENAI_API_KEY"))
-            prompt = gr.Code(label="prompt", language="python", lines=40, value=f"""
+            prompt = gr.Code(label="Prompt (This is for you to fill out)", language="python", lines=40, value=f"""
 # A prompt to describe this game to the GPT model.
 
 # Ideas: 
@@ -416,10 +416,10 @@ def move(board, action, old_pos):
                 start_btn = gr.Button("Prompt >")
                 cancel_btn = gr.Button("Cancel")
         with gr.Column():
-            im = gr.Gallery()
-            im.style(preview=True)
+            im = gr.Gallery(label="Gallery of the Game")
+            im.style(preview=True, object_fit="scale-down", columns=1, container=True)
 
-            output = gr.Code(language="python", value="""def my_example():
+            output = gr.Code(label="Generating Game Code (You can also edit and rerun)",  language="python", value="""def my_example():
     b = Game(init=(0, 0), flag=(2, 2), walls= [], boundary= (3, 3), key= (1, 1)) 
     p = (0, 0)
     # This is the code you want it to generate.
