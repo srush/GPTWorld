@@ -1,0 +1,6 @@
+gradio
+git+https://github.com/chalk-diagrams/chalk
+openai
+pycairo
+tiktoken
+imageio
