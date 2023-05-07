@@ -380,6 +380,10 @@ GPTWorld is a prompting game. Your goal is to get an LLM to complete a maze. You
                             choices=["Easy", "Medium", "Hard", "Evil"])
             api_key = gr.Text(label="OpenAI Key", type="password",
                               value=os.environ.get("OPENAI_API_KEY"))
+            with gr.Row():
+                start_btn = gr.Button("Prompt >")
+                cancel_btn = gr.Button("Cancel")
+
             prompt = gr.Code(label="Prompt (This is for you to fill out)", language="python", lines=40, value=f"""
 # A prompt to describe this game to the GPT model.
 
@@ -412,9 +416,6 @@ def move(board, action, old_pos):
 
 # Finally use %GAME% to inject the game description above.
 """)
-            with gr.Row():
-                start_btn = gr.Button("Prompt >")
-                cancel_btn = gr.Button("Cancel")
         with gr.Column():
             im = gr.Gallery(label="Gallery of the Game")
             im.style(preview=True, object_fit="scale-down", columns=1, container=True)
