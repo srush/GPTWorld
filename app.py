@@ -1,7 +1,5 @@
 import os
 import sys
-sys.path.insert(0, "/home/srush/Projects/MiniChain/venv/lib/python3.10/site-packages")
-print(sys.path)
 import gradio as gr
 from dataclasses import dataclass
 from chalk import *
@@ -390,11 +388,13 @@ The game takes place on a hexagonal grid with walls. Even rows are labeled (0,0)
 # * Give code examples that solve similar mazes.
 # * Give examples to explain the reasoning process
 
+# You might want to do this in a separate editor and paset in.
+
 # For example you might want to tell it how the moves work
 
 change_str = {change_str}
 
-# Or make up a clear implementation for the move function
+# Or make up a clear implementation for the move function.
 
 def move(board, action, old_pos):
     # ACTIONS (must be legal)
@@ -408,7 +408,7 @@ def move(board, action, old_pos):
         assert pos == board.key
     return pos
 
-# You can test your code on the right side.
+# You can also test your code on the right side to make few-shot examples.
 
 # Finally use %GAME% to inject the game description above.
 """)
@@ -490,7 +490,7 @@ def move(board, action, old_pos):
 
 
     
-app.queue().launch()
+app.queue().launch(share=True)
 
 
 # f = io.StringIO()
