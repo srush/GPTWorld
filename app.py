@@ -368,7 +368,7 @@ with gr.Blocks() as app:
 <h1>🌎 GPTWorld 🌍</h1>
 
 <p>
-GPTWorld is a prompting game. Your goal is to get an LLM to complete a maze. You start at (o) need to first get the key and then reach the exit (x).  The game takes place on a hexagonal grid with walls [Even rows are labeled (0,0), (0, 2), (0,4) and odd rows are labeled (1, 1), (1, 3), (1, 5)]. You play by prompting GPT to write code which solves the game on the right.
+GPTWorld is a prompting game. Your goal is to get an LLM to complete a maze. You are the red dot (🔴) need to first get the key (▲) and then reach the exit (x).  The game takes place on a hexagonal grid with walls [Even rows are labeled (0,0), (0, 2), (0,4) and odd rows are labeled (1, 1), (1, 3), (1, 5)]. You play by prompting GPT to write code which solves the game on the right.
 </p>
 </center>
 """)
