@@ -1,3 +1,13 @@
+---
+title: GPTWorld
+emoji:  🌎
+colorFrom: blue
+colorTo: orange
+sdk: gradio
+app_file: app.py
+pinned: false
+---
+
 # GPTWorld - Prompt Golf
 
 <p align="center">
