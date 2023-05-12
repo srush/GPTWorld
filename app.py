@@ -19,16 +19,12 @@ import csv
 from huggingface_hub import HfApi, Repository
 DATASET_REPO_URL = "https://huggingface.co/datasets/srush/gptworld-leaderboard"
 HF_TOKEN = os.environ.get("HF_API")
-hf_api = HfApi(
-    endpoint="https://huggingface.co", # Can be a Private Hub endpoint.
-    token=os.environ.get("HF_API"), # Token is not persisted on the machine.
-)
 DATA_FILENAME = "data.csv"
 DATA_FILE = os.path.join("data", DATA_FILENAME)
 
 openai.api_key = ""
 tab = "    "
-repo = Repository(
+repo = Repository(git_user="srush",
     local_dir="data", clone_from=DATASET_REPO_URL, use_auth_token=HF_TOKEN
 )
 
