@@ -4,3 +4,4 @@ openai
 pycairo
 tiktoken
 imageio
+pandas

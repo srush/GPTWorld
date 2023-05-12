@@ -14,8 +14,23 @@ from contextlib import redirect_stdout
 import imageio
 import tiktoken
 import time
+import pandas as pd
+import csv
+from huggingface_hub import HfApi, Repository
+DATASET_REPO_URL = "https://huggingface.co/datasets/srush/gptworld-leaderboard"
+HF_TOKEN = os.environ.get("HF_API")
+hf_api = HfApi(
+    endpoint="https://huggingface.co", # Can be a Private Hub endpoint.
+    token=os.environ.get("HF_API"), # Token is not persisted on the machine.
+)
+DATA_FILENAME = "data.csv"
+DATA_FILE = os.path.join("data", DATA_FILENAME)
+
 openai.api_key = ""
 tab = "    "
+repo = Repository(
+    local_dir="data", clone_from=DATASET_REPO_URL, use_auth_token=HF_TOKEN
+)
 
 def start2(prompt, board, api_key):
     out = ""
@@ -175,6 +190,10 @@ class Game:
     def walls(self):
         return self.board.wall_pos
 
+    def won(self):
+        final = self.board
+        return final.key_pos is None and final.player_pos == final.flag_pos
+    
     def __repr__(self) -> str:
         walls = ",".join(map(str, self.board.wall_pos))
         return f"Game(init={self.board.player_pos}, flag={self.board.flag_pos}, walls={self.board.wall_pos}, boundary={self.boundary}, key={self.board.key_pos})"
@@ -379,7 +398,8 @@ GPTWorld is a prompting game. Your goal is to get an LLM to complete a maze. You
             examples = gr.Radio(show_label=False,
                             choices=["Easy", "Medium", "Hard", "Evil"])
             api_key = gr.Text(label="OpenAI Key", type="password",
-                              value=os.environ.get("OPENAI_API_KEY"))
+                              value=os.environ.get("OPENAI_API_KEY"),
+                              visible=not os.environ.get("OPENAI_API_KEY"))
             with gr.Row():
                 start_btn = gr.Button("Prompt >")
                 cancel_btn = gr.Button("Cancel")
@@ -419,6 +439,7 @@ def move(board, action, old_pos):
         with gr.Column():
             im = gr.Gallery(label="Gallery of the Game")
             im.style(preview=True, object_fit="scale-down", columns=1, container=True)
+            msg_box = gr.Text(label="", show_label=False)
 
             output = gr.Code(label="Generating Game Code (You can also edit and rerun)",  language="python", value="""def my_example():
     b = Game(init=(0, 0), flag=(2, 2), walls= [], boundary= (3, 3), key= (1, 1)) 
@@ -430,10 +451,10 @@ def move(board, action, old_pos):
     p = move(b, "R", p)
     return b
 """, lines=50)
-            msg_box = gr.Text(label="Errors")
+
             counter = gr.Slider(label="length", minimum=0, maximum=3000)
             run_btn = gr.Button("Rerun ^")
-
+            state = gr.State()
 
             
     examples.change(load, inputs=[examples], outputs=[im, game_desc])
@@ -447,7 +468,8 @@ def move(board, action, old_pos):
         i = 0
         count = 0
         im_ = [f"tmp.svg"]
-        yield {im: im_, counter: 0, output: "", msg_box: ""}
+        state_val = None
+        yield {im: im_, counter: 0, output: "", msg_box: "", state: state_val}
 
         for prefix in start(inp, board, data[api_key]):
             ps = prefix.split("\n")
@@ -467,8 +489,18 @@ def move(board, action, old_pos):
                 yield {im: im_, counter: count, output: prefix}
             else:
                 yield {im: im_, counter: count, output: prefix}
-        yield {im: [f"pic{j}.svg" for j in range(i)], counter: count, output: prefix}
-    start_prompt = start_btn.click(run, inputs={prompt, game_desc, api_key}, outputs={im, output, counter, msg_box})
+        if q["board"].won():
+            final_msg = "🎇🎇🎇🎇🎇🎇Victory🎇🎇🎇🎇🎇🎇"
+            state_val = (data[prompt], prefix, count, data[examples])
+        else:
+            final_msg = "Didn't make it"
+        yield {im: [f"pic{j}.svg" for j in range(i)], counter: count, output: prefix,
+               msg_box: final_msg, state: state_val}
+
+
+    start_prompt = start_btn.click(run,
+                                   inputs={prompt, game_desc, api_key, examples},
+                                   outputs={im, output, counter, msg_box, state})
     cancel_btn.click(None, cancels=[start_prompt])
     def run2(data):
         c = data[output]
@@ -489,8 +521,31 @@ def move(board, action, old_pos):
         return out
     run_btn.click(run2, inputs={output}, outputs={im})
 
+    gr.HTML("""<center><h2>Leaderboard</h2></center>""")
+    with gr.Row() as row:
+        team_name = gr.Text(label="Team Name")
+        leaderboard = gr.Button(value="Submit")
+        msg = gr.Text(label="Status")
+    leader = gr.Dataframe(pd.read_csv(DATA_FILE)[["team", "board", "count"]])
+    def leaderfn(data):
+        if data[state] is None:
+            return {msg: "Nothing to submit"}
+        if not data[team_name]:
+            return {msg: "No team name"}
+        prompt, code, count, board = data[state]
+        repo.git_pull()
+        with open(DATA_FILE, "a") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=["team", "prompt", "code", "count", "board"])
+            writer.writerow(
+                {"team": data[team_name], "prompt": prompt, "code": code, "count": count, "board": board}
+            )
+        commit_url = repo.push_to_hub()
+        leader_df = pd.read_csv(DATA_FILE)[["team", "board", "count"]]
+        leader_df = leader_df.sort_values(["board", "count"])
+        return {msg: f"Sucess: Final score: {count} {board}", leader: leader_df}
+        
+    leaderboard.click(fn=leaderfn, inputs={state, team_name}, outputs={msg, leader})    
 
-    
 app.queue().launch()
 
 
