@@ -490,7 +490,7 @@ def move(board, action, old_pos):
             state_val = (data[prompt], prefix, count, data[examples])
         else:
             final_msg = "Didn't make it"
-        yield {im: [f"pic{j}.svg" for j in range(i)], counter: count, output: prefix,
+        yield {im: [f"pic{j}.svg" for j in range(i-1, i)], counter: count, output: prefix,
                msg_box: final_msg, state: state_val}
 
 
