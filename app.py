@@ -27,7 +27,7 @@ tab = "    "
 repo = Repository(git_user="srush",
     local_dir="data", clone_from=DATASET_REPO_URL, use_auth_token=HF_TOKEN
 )
-
+repo.git_pull()
 def start2(prompt, board, api_key):
     out = ""
     # for chunk in openai.ChatCompletion.create(
@@ -517,7 +517,15 @@ def move(board, action, old_pos):
         return out
     run_btn.click(run2, inputs={output}, outputs={im})
 
-    gr.HTML("""<center><h2>Leaderboard</h2></center>""")
+    gr.HTML("""<center><h2>Leaderboard</h2></center>
+
+<center>
+To submit, first run a model that gets to the end. It will output "Victory"! 
+Then come down to the bottom, type in your team name, and then click submit. 
+The score is the number of output tokens your solution takes.
+</center>
+
+""")
     with gr.Row() as row:
         team_name = gr.Text(label="Team Name")
         leaderboard = gr.Button(value="Submit")
