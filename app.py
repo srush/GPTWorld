@@ -238,6 +238,7 @@ def draw_board(grid, num=0):
     canvas = canvas.center_xy().frame(0.5)
     canvas = rectangle(canvas.get_envelope().width, canvas.get_envelope().height).line_width(0.5).fill_color(Color("orange")) + canvas
     canvas.render_svg(f"pic{num}.svg", 256)
+    canvas.render(f"pic{num}.png", 256)
     return canvas
 
 
@@ -354,12 +355,20 @@ evil_game = Game(boundary=(8, 15), key=(5, 1), flag=(7, 13), init=(0, 0), walls=
 
 games = {"Easy": easy_game, "Medium": medium_game, "Hard": hard_game, "Evil": evil_game}
 
-# Animate the outputs as a GIF
-def animate(l):
+# Anima
+def animate(game):
+    cur = game.original
+    i = 0
     images = []
-    for i in range(l):
+    draw_board(cur.grid, i)
+    images.append(imageio.v2.imread(f"pic{i}.png"))
+    for act in game.actions:
+        cur = cur.move(act)
+        i += 1
+        draw_board(cur.grid, i)
         images.append(imageio.v2.imread(f"pic{i}.png"))
-    return imageio.v2.mimsave('movie.gif', images, **{ 'duration': 0.5 })
+
+    return imageio.v2.mimsave('movie.gif', images, **{ 'duration':  1000, 'loop': 100})
 
 
 def load(inp):
@@ -435,7 +444,7 @@ def move(board, action, old_pos):
         with gr.Column():
             im = gr.Gallery(label="Gallery of the Game")
             im.style(preview=True, object_fit="scale-down", columns=1, container=True)
-            msg_box = gr.Text(label="", show_label=False)
+            msg_box = gr.HTML(label="", show_label=False)
 
             output = gr.Code(label="Generating Game Code (You can also edit and rerun)",  language="python", value="""def my_example():
     b = Game(init=(0, 0), flag=(2, 2), walls= [], boundary= (3, 3), key= (1, 1)) 
@@ -490,7 +499,9 @@ def move(board, action, old_pos):
             state_val = (data[prompt], prefix, count, data[examples])
         else:
             final_msg = "Didn't make it"
-        yield {im: [f"pic{j}.svg" for j in range(i-1, i)], counter: count, output: prefix,
+        animate(q["board"])
+
+        yield {im: ["movie.gif"], counter: count, output: prefix,
                msg_box: final_msg, state: state_val}
 
 
@@ -502,8 +513,9 @@ def move(board, action, old_pos):
         c = data[output]
         print(c)
         i = 0
+        q = {}
         for j in range(len(c)):
-            q = {}
+
             prefix = c[:j]
             ps = prefix.split("\n")
             if len(ps) > 3 and not ps[-2].strip().startswith("#") and prefix.endswith("\n"):
@@ -511,11 +523,11 @@ def move(board, action, old_pos):
                 exec(prefix + "\n    return b\nq['board'] = my_example()")
                 draw_board(q["board"].board.grid, i)
                 i += 1
-        animate(i)
-        out =  {im: [f"pic{j}.svg" for j in range(i)]}
+        animate(q["board"])
+        out =  {im: [f"movie.gif"], msg_box: ""}
         print(out)
         return out
-    run_btn.click(run2, inputs={output}, outputs={im})
+    run_btn.click(run2, inputs={output}, outputs={im, msg_box})
 
     gr.HTML("""<center><h2>Leaderboard</h2></center>
 
